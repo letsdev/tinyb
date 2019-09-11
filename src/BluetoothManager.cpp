@@ -185,7 +185,7 @@ std::unique_ptr<BluetoothObject> BluetoothManager::find(BluetoothType type,
 
     if (object == nullptr) {
         event->wait(timeout);
-        object = std::unique_ptr<BluetoothObject>(event->get_result());
+        object = std::unique_ptr<BluetoothObject>(event->get_result()->clone());
     }
 
     event->cancel();
