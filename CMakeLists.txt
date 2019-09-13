@@ -19,9 +19,9 @@ include(GNUInstallDirs)
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 # Make a version file containing the current version from git.
-include (GetGitRevisionDescription)
-git_describe (VERSION "--tags")
-
+#include (GetGitRevisionDescription)
+#git_describe (VERSION "--tags")
+set (VERSION "v0.5.3")
 if ("x_${VERSION}" STREQUAL "x_GIT-NOTFOUND" OR "x_${VERSION}" STREQUAL "x_HEAD-HASH-NOTFOUND" OR "x_${VERSION}" STREQUAL "x_-128-NOTFOUND")
   message (WARNING " - Install git to compile a production libtinyb!")
   set (VERSION "v0.5.0-dirty")
