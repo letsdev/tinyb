@@ -101,7 +101,8 @@ std::string BluetoothManager::get_class_name() const {
 }
 
 std::string BluetoothManager::get_java_class() const {
-    return std::string(JAVA_PACKAGE("/BluetoothManager");
+    return std::string(JAVA_PACKAGE
+    "/BluetoothManager");
 }
 
 std::string BluetoothManager::get_object_path() const {
@@ -188,8 +189,9 @@ BluetoothManager::find(BluetoothType type, std::string *name, std::string *ident
 void
 BluetoothManager::handle_event(BluetoothType type, std::string *name, std::string *identifier, BluetoothObject *parent,
                                BluetoothObject &object) {
-    event_list_lock.lock();
+    std::lock_guard <std::mutex> guard(mutex);
     for (auto it = event_list.begin(); it != event_list.end();) {
+
         if ((*it)->get_type() != BluetoothType::NONE && ((*it)->get_type()) != type) {
             ++it;
             continue; /* this event does not match */
@@ -211,14 +213,10 @@ BluetoothManager::handle_event(BluetoothType type, std::string *name, std::strin
             }
         /* The event matches, execute and see if it needs to reexecute */
         if ((*it)->execute_callback(object)) {
-            if (containsEvent(*it)) {
-                std::cout << "handle_event-erasing event from event_list" << std::endl;
-                it = event_list.erase(it);
-            }
+            it = event_list.erase(it);
         } else
             ++it;
     }
-    event_list_lock.unlock();
 }
 
 static gpointer init_manager_thread(void *data) {
